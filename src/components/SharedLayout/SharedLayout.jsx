@@ -1,20 +1,16 @@
+import { Loader } from 'components/Loader/Loader';
 import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Container, Header, Logo, Link } from './SharedLayouts.styled';
-import { Loader } from '../Loader/Loader';
-
+import { Container, Header, Link } from './SheredLayout.styled';
 export const SharedLayout = () => {
   return (
     <Container>
       <Header>
-        <Logo />
         <nav>
-          <Link to="/" end onClick={e => e.currentTarget.blur()}>
+          <Link to="/" end>
             Home
           </Link>
-          <Link to="/movies" onClick={e => e.currentTarget.blur()}>
-            Movies
-          </Link>
+          <Link to="/movies">Movies</Link>
         </nav>
       </Header>
 

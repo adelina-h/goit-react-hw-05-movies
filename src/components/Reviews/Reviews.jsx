@@ -1,37 +1,25 @@
 import { useParams } from 'react-router-dom';
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css';
-import { Wrapper, List, Item, Author, Content } from './Reviews.styled';
-import { useRequest } from '../../services/useRequest';
+import { useEffect, useState } from 'react';
+import { getReviews } from 'Api/apiService';
 
 const Reviews = () => {
+  const [reviewsList, setReviewsList] = useState([]);
   const { movieId } = useParams();
-  const { data, error } = useRequest(`/movie/${movieId}/reviews`);
+  useEffect(() => {
+    getReviews(movieId).then(data => setReviewsList(data.results));
+  }, [movieId]);
 
   return (
-    <>
-      {error && <h2>Something went wrong. Try again later.</h2>}
-      {!data ? (
-        <SkeletonTheme baseColor="#dddddd" highlightColor="#a5a5a5">
-          <Skeleton style={{ height: 30, width: 250, marginBottom: 15 }} />
-          <Skeleton count={3} style={{ height: 20, width: 600, marginBottom: 5 }} />
-        </SkeletonTheme>
-      ) : data.results.length === 0 ? (
-        <h2>We don't have any reviews for this movie.</h2>
-      ) : (
-        <Wrapper>
-          <List>
-            {data.results.map(({ id, author, content }) => (
-              <Item key={id}>
-                <Author>Author: {author}</Author>
-                <Content>{content}</Content>
-              </Item>
-            ))}
-          </List>
-        </Wrapper>
-      )}
-    </>
+    <ul>
+      {reviewsList.length > 0
+        ? reviewsList.map(({ author, content, id }) => (
+            <li key={id}>
+              <h3>{author}</h3>
+              <p>{content}</p>
+            </li>
+          ))
+        : "Sorry, we don't have any review for this movie"}
+    </ul>
   );
 };
-
 export default Reviews;
